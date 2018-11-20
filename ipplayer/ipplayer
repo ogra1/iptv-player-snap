@@ -11,8 +11,8 @@ PLIST="$SNAP/channels.m3u"
 PLAYER="$SNAP/usr/bin/omxplayer.bin"
 VOL="-1200"
 OMXOPTS="-I -o hdmi -b --aspect-mode stretch -r -w -d --timeout 60 --live --vol $VOL"
-FONT="--font /snap/omxplayer-pi/current/usr/share/fonts/truetype/freefont/FreeSans.ttf"
-ITFONT="--italic-font /snap/omxplayer-pi/current/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf"
+FONT="--font $SNAP/usr/share/fonts/truetype/freefont/FreeSans.ttf"
+ITFONT="--italic-font $SNAP/usr/share/fonts/truetype/freefont/FreeSerifItalic.ttf"
 PLAYERPID=""
 
 pkill -9 omxplayer.bin
