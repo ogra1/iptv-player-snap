@@ -1,0 +1,93 @@
+<html>
+<head>
+<title>TV</title>
+<style>
+.button {
+    background-color: #4CAF50;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 5em;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+.center {
+    margin: auto;
+    width: 40%;
+    height: 30%;
+    border: 1px, solid, red;
+    padding: 10px;
+    text-align: center;
+    position: relative;
+}
+h1 {
+    font-size: 2em;
+    font-family: Sans;
+    text-align: center;
+}
+.left {
+    display: block;
+    float: left;
+}
+.right {
+    display: block;
+    float: right;
+}
+.full {
+    width: 100%;
+    display: block;
+    float: bottom;
+    font-size: 2em;
+    font-family: Sans;
+    text-align: center;
+    position: absolute;
+    bottom: 10;
+}
+.logo {
+    position: relative;
+    left: 10;
+}
+.name {
+    position: relative;
+    left: 10;
+}
+</style>
+</head>
+<body>
+<div class=center>
+<div class=full>
+<div class=logo></div>
+<div class=name></div>
+</div>
+</div>
+<div class=center>
+<div class=left>
+  <div class=center>
+    <h1>Volume</h1>
+    <p>
+      <a class=button href="/vup">&#9650;</a>
+    </p>
+    <p>
+      <a class=button href="/vdown">&#9660;</a>
+    </p>
+  </div>
+</div>
+<div class=right>
+  <div class=center>
+    <h1>Channel</h1>
+    <p>
+      <a class=button href="/up">&#9650;</a>
+    </p>
+    <p>
+      <a class=button href="/down">&#9660;</a>
+    </p>
+  </div>
+
+</div>
+</div>
+</body>
+</html>
