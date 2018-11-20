@@ -2,7 +2,7 @@
 
 #set -x
 
-PORT="8080"
+PORT="80"
 INFIFO="$SNAP_DATA/omxfifo"
 OUTFIFO="$SNAP_DATA/outfifo"
 HTMDIR="$SNAP"
