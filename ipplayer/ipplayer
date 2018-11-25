@@ -10,7 +10,7 @@ CHANNEL="$SNAP_DATA/channel"
 PLIST="$SNAP/channels.m3u"
 PLAYER="$SNAP/usr/bin/omxplayer.bin"
 VOL="-1200"
-OMXOPTS="-I -o hdmi -b --aspect-mode stretch -r -w -d --timeout 60 --live --vol $VOL --video_queue 40 --audio_queue 40"
+OMXOPTS="--timeout 60 --vol $VOL"
 PLAYERPID=""
 
 pkill -9 omxplayer.bin
