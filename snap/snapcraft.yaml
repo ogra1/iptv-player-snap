@@ -24,15 +24,34 @@ apps:
     daemon: oneshot
     plugs:
       - opengl
-  ipplayer-pi:
-    command: ipplayer
+  omx-player:
+    command: omx-player
     daemon: simple
     environment:
       LD_LIBRARY_PATH: $SNAP/usr/lib/omxplayer:$SNAP/lib:$SNAP/usr/lib:$SNAP/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/samba:$LD_LIBRARY_PATH
+      INFIFO: "$SNAP_DATA/omxfifo"
+      OUTFIFO: "$SNAP_DATA/outfifo"
+      CHANNEL: "$SNAP_DATA/channel"
     plugs:
       - network
       - network-bind
       - opengl
+  ipplayer-pi:
+    command: ipplayer
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+
+hooks:
+  configure:
+    plugs:
+      - network
+      - network-bind
+  install:
+    plugs:
+      - network
+      - network-bind
 
 parts:
   vc4-libs:
@@ -133,5 +152,7 @@ parts:
     override-build: |
       mkdir -p $SNAPCRAFT_PART_INSTALL/bin
       cp -av ipplayer/ipplayer $SNAPCRAFT_PART_INSTALL/bin/
+      cp -av ipplayer/omx-player $SNAPCRAFT_PART_INSTALL/bin/
       cp -av ipplayer/index.html $SNAPCRAFT_PART_INSTALL/
       cp -av ipplayer/channels.m3u $SNAPCRAFT_PART_INSTALL/
+      cp -av ipplayer/config $SNAPCRAFT_PART_INSTALL/

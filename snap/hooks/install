@@ -1,0 +1,22 @@
+#! /bin/sh
+
+# check any existing settings
+PLIST="$(snapctl get playlist)"
+PORT="$(snapctl get port)"
+VOL="$(snapctl get volume)"
+OMXOPTS="$(snapctl get omxopts)"
+
+# set defaults
+if [ -z "$PLIST" ]; then
+    PLIST="/var/snap/$SNAP_NAME/current/channels.m3u"
+    snapctl set playlist="$PLIST"
+fi
+
+[ -n "$PORT" ] || snapctl set port="80"
+[ -n "$VOL" ] || snapctl set volume="--vol -2000"
+[ -n "$OMXOPTS" ] || snapctl set omxopts="--timeout 60"
+
+# copy playlist in place
+[ -e "$PLIST" ] || cp $SNAP/channels.m3u $PLIST
+# set first channel as default
+[ -e "$SNAP_DATA/channel" ] || grep ^http $PLIST | head -1 >$SNAP_DATA/channel

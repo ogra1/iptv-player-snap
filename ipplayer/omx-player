@@ -1,0 +1,27 @@
+#! /bin/sh
+
+. $SNAP/config
+
+PLIST="$(snapctl get playlist)"
+VOL="--vol $(snapctl get volume)"
+OMXOPTS="$(snapctl get omxopts)"
+
+[ -e "$INFIFO" ] || mkfifo "$INFIFO"
+[ -e "$CHANNEL" ] || grep ^http "$PLIST" | head -1 >"$CHANNEL"
+
+cleanup() {
+    [ -e "$SNAP_DATA/omx.pid" ] && kill -9 "$(cat $SNAP_DATA/omx.pid)"
+    rm -f $SNAP_DATA/omx.pid
+    exit 0
+}
+
+trap cleanup EXIT INT QUIT ILL KILL SEGV TERM
+
+while true; do
+    $PLAYER $OMXOPTS $VOL "$(cat $CHANNEL)" <$INFIFO >$OUTFIFO 2>&1 &
+    PID=$!
+    echo "$PID" >$SNAP_DATA/omx.pid
+    sleep 0.5
+    echo . >$INFIFO
+    wait $PID
+done

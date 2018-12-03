@@ -2,27 +2,10 @@
 
 #set -x
 
-PORT="80"
-INFIFO="$SNAP_DATA/omxfifo"
-OUTFIFO="$SNAP_DATA/outfifo"
-HTMDIR="$SNAP"
-CHANNEL="$SNAP_DATA/channel"
-PLIST="$SNAP/channels.m3u"
-PLAYER="$SNAP/usr/bin/omxplayer.bin"
-VOL="-1200"
-OMXOPTS="--timeout 60 --vol $VOL"
-PLAYERPID=""
+. $SNAP/config
 
-pkill -9 omxplayer.bin
-[ -e "$INFIFO" ] || mkfifo $INFIFO
-[ -e "$CHANNEL" ] || grep ^http $PLIST | head -1 >$CHANNEL
-
-cleanup() {
-  kill -9 $PLAYERPID
-  rm -f $INFIFO >/dev/null 2>&1
-  rm -f $OUTFIFO >/dev/null 2>&1
-  exit 0
-}
+PLIST="$(snapctl get playlist)"
+PORT="$(snapctl get port)"
 
 set_name() {
   CUR="$(grep -B1 "$1" $PLIST |head -1|sed 's/.*logo=\"//;s/\"//')"
@@ -33,64 +16,49 @@ set_name() {
   echo "PLAYING: $NME" >"$OUTFIFO"
 }
 
-run_omxplayer(){
-  $PLAYER $OMXOPTS "$1" <"$INFIFO" >"$OUTFIFO" 2>&1 &
-  PLAYERPID=$!
-  echo . >$INFIFO
-  set_name "$1"
+switch_chan() {
+  NXT="$1"
+
+  [ -n "$NXT" ] || $NXT="$(cat $CHANNEL)"
+  echo "$NXT" >$CHANNEL
+
+  if ! kill -9 "$(cat $SNAP_DATA/omx.pid)"; then
+    snapctl restart ${SNAP_NAME}.omx-player
+  fi
+  set_name "$NXT"
 }
-
-trap cleanup EXIT INT QUIT ILL KILL SEGV TERM
-
-run_omxplayer "$(cat $CHANNEL)"
 
 while true; do
      HTM="$(cat $HTMDIR/index.html)"
      RET="$(/bin/echo -e "HTTP/1.1 200 OK\r\n\n${HTM}" | \
-        nc -l $PORT | grep -v favico | grep GET | \
+        nc -l "$PORT" | grep -v favico | grep GET | \
         sed 's/^GET \///;s/ .*$//'|head -1)"
      case $RET in
        up)
          while true; do
-           NXT="$(grep "$(cat $CHANNEL)" -A2 $PLIST |tail -1)"
+           NXT="$(grep "$(cat $CHANNEL)" -A2 "$PLIST" |tail -1)"
+           switch_chan "$NXT"
 
-           [ -n "$NXT" ] || $NXT="$(cat $CHANNEL)"
-           # set_name "$NXT"
-
-           echo "$NXT" >$CHANNEL
-           [ -n "$PLAYERPID" ] && kill -9 $PLAYERPID >/dev/null 2>&1
-           run_omxplayer "$NXT"
-           echo . >$INFIFO
-
-           sleep 1.5
-           if ! grep -q "have a nice day" $OUTFIFO; then
+           if ! grep -q "have a nice day" "$OUTFIFO"; then
              break
            fi
          done
          ;;
        down)
          while true; do
-           NXT="$(grep "$(cat $CHANNEL)" -B2 $PLIST | grep -v ^# | head -1 )"
+           NXT="$(grep "$(cat $CHANNEL)" -B2 "$PLIST" | grep -v "^#" | head -1 )"
+           switch_chan "$NXT"
 
-           [ -n "$NXT" ] || $NXT="$(cat $CHANNEL)"
-           # set_name "$NXT"
-
-           echo "$NXT" >$CHANNEL
-           [ -n "$PLAYERPID" ] && kill -9 $PLAYERPID >/dev/null 2>&1
-           run_omxplayer "$NXT"
-           echo . >$INFIFO
-
-           sleep 1.5
-           if ! grep -q "have a nice day" $OUTFIFO; then
+           if ! grep -q "have a nice day" "$OUTFIFO"; then
              break
            fi
          done
          ;;
        vup)
-         echo -n '+' >$INFIFO
+         echo -n '+' >"$INFIFO"
          ;;
        vdown)
-         echo -n '-' >$INFIFO
+         echo -n '-' >"$INFIFO"
          ;;
      esac
 done

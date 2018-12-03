@@ -1,0 +1,5 @@
+INFIFO="$SNAP_DATA/omxfifo"
+OUTFIFO="$SNAP_DATA/outfifo"
+CHANNEL="$SNAP_DATA/channel"
+PLAYER="$SNAP/usr/bin/omxplayer.bin"
+HTMDIR="$SNAP"
