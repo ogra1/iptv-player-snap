@@ -13,7 +13,7 @@ if [ -z "$PLIST" ]; then
 fi
 
 [ -n "$PORT" ] || snapctl set port="80"
-[ -n "$VOL" ] || snapctl set volume="--vol -2000"
+[ -n "$VOL" ] || snapctl set volume="-2000"
 [ -n "$OMXOPTS" ] || snapctl set omxopts="--timeout 60"
 
 # copy playlist in place
