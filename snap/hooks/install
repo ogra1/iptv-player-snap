@@ -14,7 +14,7 @@ fi
 
 [ -n "$PORT" ] || snapctl set port="80"
 [ -n "$VOL" ] || snapctl set volume="-2000"
-[ -n "$OMXOPTS" ] || snapctl set omxopts="--timeout 60"
+[ -n "$OMXOPTS" ] || snapctl set omxopts="--timeout 60 --blank=0xFF111111"
 
 # copy playlist in place
 [ -e "$PLIST" ] || cp $SNAP/channels.m3u $PLIST
