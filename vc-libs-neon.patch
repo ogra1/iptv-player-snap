@@ -44,7 +44,7 @@ index 957846a..5281286 100644
  endif()
  
 +# build with neon by default
-+add_definitions("-mcpu=cortex-a8 -mfpu=neon-vfpv4 -mfloat-abi=hard -funsafe-math-optimizations -ftree-vectorize")
++add_definitions("-mcpu=cortex-a8 -mfpu=neon-vfpv4 -mfloat-abi=hard")
  
  # All linux systems have sbrk()
  add_definitions(-D_HAVE_SBRK)
