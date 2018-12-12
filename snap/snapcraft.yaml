@@ -33,6 +33,7 @@ apps:
       OUTFIFO: "$SNAP_DATA/outfifo"
       CHANNEL: "$SNAP_DATA/channel"
     plugs:
+      - framebuffer
       - network
       - network-bind
       - opengl

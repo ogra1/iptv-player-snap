@@ -17,6 +17,9 @@ cleanup() {
 
 trap cleanup EXIT INT QUIT ILL KILL SEGV TERM
 
+# try to blank the screen
+cat /dev/zero >/dev/fb0 2>/dev/null || true
+
 while true; do
     $PLAYER $OMXOPTS $VOL "$(cat $CHANNEL)" <$INFIFO >$OUTFIFO 2>&1 &
     PID=$!
