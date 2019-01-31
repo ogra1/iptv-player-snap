@@ -1,5 +1,5 @@
 name: rpi-iptv-player
-version: '0.1'
+version: '0.2'
 summary: OpenMax IPTV player for the raspberry pi
 description: |
   OMXPlayer is a commandline OMX player for the Raspberry PI.
